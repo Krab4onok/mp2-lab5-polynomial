@@ -10,6 +10,10 @@ int main()
 	a.px = 3;
 	a.py = 2;
 	a.pz = 1;
-	p.AddMonom(a);
+	//p.AddMonom(a);
+	int k;
+	k = 4;
+	//p*k;
+	p += p;
 	cout << p;
 }

@@ -71,11 +71,19 @@ public:
 		a.pz = j;
 		return is;
 	}
+	TMonom(double coef1, int px1, int py1, int pz1)
+	{
+		coef = coef1;
+		px = px1;
+		py = py1;
+		pz = pz1;
+	}
+	TMonom() {};
 };
 template <class T>
 class TList
 {
-protected:
+public:
 	TNode <T>* pFirst;
 	TNode <T>* pLast;
 	TNode <T>*pCurr;
@@ -111,12 +119,6 @@ public:
 
 
 		} while (tmp != pLast);
-		a.pCurr = pCurr;
-		a.pLast = pLast;
-		a.pPrev = pPrev;
-		a.pStop = pStop;
-		a.pos = pos;
-		a.len = len;
 	}
 	void InsFirst(T a)
 	{
@@ -197,11 +199,11 @@ public:
 	}
 	bool IsEnd()
 	{
-		return pCurr == pStop;
+		return pCurr == NULL;
 	}
 };
 template <class T>
-class THeadList: protected TList<T>
+class THeadList: public TList<T>
 {
 protected:
 	TNode<T>* pHead;
@@ -366,11 +368,12 @@ class TPolinom : public THeadList<TMonom>
 				pm = pCurr->val;
 				qm = a.pCurr->val;
 				if (pm > qm)GoNext();
-				else if (pm < qm)
-				{
-					InsCurr(qm); 
-					a.GoNext();
-				}
+				else 
+					if (pm < qm)
+					{
+						InsCurr(qm);
+						a.GoNext();
+					}
 				else
 				{
 					rm = pm;
@@ -383,8 +386,10 @@ class TPolinom : public THeadList<TMonom>
 					else
 					{
 						pCurr->val = rm;
+						a.GoNext();
 					}
 				}
 			}
 		}
+		
 };
