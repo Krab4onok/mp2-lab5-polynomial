@@ -14,6 +14,7 @@ struct TMonom
 public:
 	bool operator == (const TMonom& a)
 	{
+		//if (*this == a) return true;
 		if ( px == a.px && py == a.py && pz == a.pz) return true;
 		else return false;
 	}
@@ -26,11 +27,10 @@ public:
 	{
 		if (px > a.px) {
 			return true;
-			if (px == a.px && coef > a.coef) return true;
 		}
 		else if (py > a.py) return true;
 		else if (pz > a.pz) return true;
-		else return false;
+		return false;
 	}
 	bool operator < (const TMonom& a)
 	{
@@ -126,6 +126,7 @@ public:
 		tmp->pNext = pFirst;
 		tmp->val = a;
 		pFirst = tmp;
+		if (pPrev == NULL) pPrev = pFirst;
 		len++;
 	}
 	void InsLast(T elem)
@@ -156,16 +157,17 @@ public:
 	void InsCurr(T elem)
 	{
 		if (pCurr == pFirst) InsFirst(elem);
-		if (pCurr == pStop)throw - 1;
 		else
 		{
 			TNode <T>* tmp;
 			tmp = new TNode<T>;
+			tmp->val = elem;
 			pPrev->pNext = tmp;
 			tmp->pNext = pCurr;
-			pCurr == tmp;
+			pCurr = tmp;
 			len++;
 		}
+		if (pCurr == pStop)throw - 1;
 	}
 	void DelCurr()
 	{
@@ -199,7 +201,7 @@ public:
 	}
 	bool IsEnd()
 	{
-		return pCurr == NULL;
+		return pCurr ==NULL;
 	}
 };
 template <class T>
@@ -347,15 +349,24 @@ class TPolinom : public THeadList<TMonom>
 		}
 		friend istream& operator>>(istream& is,  TPolinom& a)
 		{
-			if (a.pCurr == NULL) 
-			{
-				TNode::TNode<TMonom>* tmp = new TNode<TMonom>;
-				a.pCurr = tmp;
-			};
-			for (a.Reset(); !a.IsEnd(); a.GoNext())
-			{
-				is >> a.pCurr->val;
+			if (a.pCurr == NULL) {
+				int n;
+				cout << "enter lenght: ";
+				cin >> n;
+				TMonom pm;
+				for (int i = 0; i < n; i++)
+				{
+					is>> pm;
+					a.AddMonom(pm);
+				}
 			}
+			else {
+				for (a.Reset(); !a.IsEnd(); a.GoNext())
+				{
+					is >> a.pCurr->val;
+				}
+			}
+			a.Reset();
 			return is;
 		}
 		void operator +=(TPolinom& a)
