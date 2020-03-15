@@ -18,5 +18,8 @@ int main()
 	cout << p;
 	TPolinom pl;
 	cin >> pl;
+	//cout << pl;
+	//p += pl;
+	pl = pl + p;
 	cout << pl;
 }

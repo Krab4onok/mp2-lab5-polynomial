@@ -25,13 +25,11 @@ public:
 	}
 	bool operator >(const TMonom& a)
 	{
-		if (px > a.px) {
-			return true;
-		}
-		else if (py > a.py) return true;
-		else if (pz > a.pz) return true;
+		if (px > a.px) return true;
+		if (px == a.px && py > a.py) return true;
+		if (px == a.px && py == a.py && pz > a.pz) return true;
 		return false;
-	}
+		};
 	bool operator < (const TMonom& a)
 	{
 		if (*this == a) return false;
@@ -378,29 +376,107 @@ class TPolinom : public THeadList<TMonom>
 			{
 				pm = pCurr->val;
 				qm = a.pCurr->val;
-				if (pm > qm)GoNext();
-				else 
+				if (pm > qm)
+				{
+					if (pCurr->pNext != NULL)
+					{
+						GoNext();
+					}
+					else 
+					{ 
+						InsLast(qm);
+						a.GoNext();
+					}
+
+				}
+				else {
 					if (pm < qm)
 					{
 						InsCurr(qm);
 						a.GoNext();
 					}
-				else
-				{
-					rm = pm;
-					rm.coef += qm.coef;
-					if (rm.coef == 0)
-					{
-						DelCurr();
-						a.GoNext();
-					}
 					else
 					{
-						pCurr->val = rm;
-						a.GoNext();
+						rm = pm;
+						rm.coef += qm.coef;
+						if (rm.coef == 0)
+						{
+							DelCurr();
+							a.GoNext();
+						}
+						else
+						{
+							pCurr->val = rm;
+							a.GoNext();
+						}
 					}
 				}
 			}
 		}
-		
+		TPolinom& operator+(TPolinom& a)
+		{
+			TMonom pm, qm, rm;
+			Reset();
+			a.Reset();
+			while (!a.IsEnd())
+			{
+				pm = pCurr->val;
+				qm = a.pCurr->val;
+				if (pm > qm)
+				{
+					if (pCurr->pNext != NULL)
+					{
+						GoNext();
+					}
+					else 
+					{ 
+						InsLast(qm);
+						a.GoNext();
+					}
+				}
+				else {
+					if (pm < qm)
+					{
+						InsCurr(qm);
+						a.GoNext();
+					}
+					else
+					{
+						rm = pm;
+						rm.coef += qm.coef;
+						if (rm.coef == 0)
+						{
+							DelCurr();
+							a.GoNext();
+						}
+						else
+						{
+							pCurr->val = rm;
+							a.GoNext();
+						}
+					}
+				}
+			}
+			return *this;
+		}
+		TPolinom& operator=(TPolinom a)
+		{
+			Reset();
+			a.Reset();
+			while (!a.IsEnd())
+			{
+				if (pCurr != NULL) { 
+					pCurr = a.pCurr;
+					a.GoNext();
+					GoNext();
+				}
+				else
+				{
+					InsCurr(a.pCurr->val);
+					if(a.pCurr!=NULL)
+					a.GoNext();
+				}
+			}
+			return *this;
+		}
 };
