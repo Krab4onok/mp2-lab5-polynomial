@@ -145,12 +145,24 @@ public:
 	}
 	void DelFirst()
 	{
-		if (len == 0)throw - 1;
-		len--;
-		TNode<T>* tmp = new TNode<T>;
-		tmp = pFirst;
-		pFirst = pFirst->pNext;
-		delete tmp;
+		if (pCurr == pFirst) {
+			if (len == 0)throw - 1;
+			len--;
+			TNode<T>* tmp = new TNode<T>;
+			tmp = pFirst;
+			pFirst = pFirst->pNext;
+			pCurr = pCurr->pNext;
+			delete tmp;
+		}
+		else
+		{
+			if (len == 0)throw - 1;
+			len--;
+			TNode<T>* tmp = new TNode<T>;
+			tmp = pFirst;
+			pFirst = pFirst->pNext;
+			delete tmp;
+		}
 	}
 	void InsCurr(T elem)
 	{
@@ -169,7 +181,10 @@ public:
 	}
 	void DelCurr()
 	{
-		if (pCurr == NULL)throw - 1;
+		if (pCurr == NULL) 
+		{
+			throw - 1;
+		};
 		if (pCurr == pStop)throw - 1;
 		if (pCurr == pFirst) DelFirst();
 		else
@@ -199,7 +214,7 @@ public:
 	}
 	bool IsEnd()
 	{
-		return pCurr ==NULL;
+		return pCurr == NULL;
 	}
 };
 template <class T>
@@ -277,13 +292,14 @@ class TPolinom : public THeadList<TMonom>
 				InsLast(M);
 			}
 		}
-		TPolinom( TPolinom &a): THeadList<TMonom>()
+		TPolinom(TPolinom &a): THeadList<TMonom>()
 		{
 			pHead->val.coef = 0;
 			pHead->val.px = 0;
 			pHead->val.py = 0;
 			pHead->val.pz = -1;
 			TMonom M;
+//			TNode<TMonom> p;
 			for (a.Reset(); !a.IsEnd(); a.GoNext())
 			{
 				M = a.pCurr->val;
@@ -315,17 +331,24 @@ class TPolinom : public THeadList<TMonom>
 			}
 				if (IsEnd())InsLast(m);
 		}
-		TPolinom operator* (double a)
+		TPolinom& operator* (double a)
 		{
-			for (Reset(); !IsEnd(); GoNext())
+			Reset();
+			while (!IsEnd())
 			{
 				pCurr->val.coef *= a;
-
+				if (pCurr->val.coef == 0) {
+					
+					 DelCurr();
+				}
+				else  GoNext();
 			}
 			return *this;
 		}
+		
 		TPolinom operator * (TMonom m)
 		{
+			if (m.coef == 0)delete this;
 			for (Reset(); !IsEnd(); GoNext())
 			{
 				pCurr->val.coef *= m.coef;
@@ -337,11 +360,16 @@ class TPolinom : public THeadList<TMonom>
 		}
 		friend ostream& operator<<(ostream& os,  TPolinom& a)
 		{
-		
+			if (a.pCurr != NULL) {
 				for (a.Reset(); !a.IsEnd(); a.GoNext())
 				{
 					os << a.pCurr->val;
 				}
+			}
+			else
+			{
+				os << a.pHead->val;
+			}
 			
 			return os;
 		}

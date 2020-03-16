@@ -17,9 +17,12 @@ int main()
 	//p += p;
 	cout << p;
 	TPolinom pl;
-	cin >> pl;
+	//cin >> pl;
 	//cout << pl;
 	//p += pl;
-	pl = pl + p;
-	cout << pl;
+	//pl = pl + p;
+	//cout << pl;
+	pl = p * 0;
+	cout << p;
+	
 }
