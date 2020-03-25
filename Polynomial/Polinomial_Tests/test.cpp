@@ -134,9 +134,8 @@ TEST(TPolinom, CAN_ADD_POLINOMS)//+
 	int f;
 	TPolinom a(m, 4);
 	TPolinom p(m, 4);
-	TPolinom r;
 	ASSERT_NO_THROW(a + p);
-	ASSERT_NO_THROW(r = a + p);
+	TPolinom r(a);
 	TPolinom ch(m1, 4);
 	r.Reset();
 	ch.Reset();
@@ -217,4 +216,17 @@ TEST(TPolinom, ASSIGNED_POLINOM_HAS_OWN_MEMORY)
 		}
 	}
 	EXPECT_NE(f, 1);
+}
+TEST(TPolinom, CAN_MULTIPY_TO_ZERO_AND_THIS_POLINOM_WILL_BE_EMPTY)
+{
+
+	int m[][2] = { { 10,321 }, { 9,241 }, { 11,159 }, { 23,124 } };
+	TPolinom a(m, 4);
+	ASSERT_NO_THROW(a * 0);
+	int f = 0;
+	for (a.Reset(); !a.IsEnd(); a.GoNext())
+	{
+		f++;
+	}
+	EXPECT_EQ(f, 0);
 }

@@ -331,7 +331,7 @@ class TPolinom : public THeadList<TMonom>
 			}
 				if (IsEnd())InsLast(m);
 		}
-		TPolinom& operator* (double a)
+		TPolinom operator* (double a)
 		{
 			Reset();
 			while (!IsEnd())
@@ -441,7 +441,7 @@ class TPolinom : public THeadList<TMonom>
 				}
 			}
 		}
-		TPolinom& operator+(TPolinom& a)
+		void operator+(TPolinom& a)
 		{
 			TMonom pm, qm, rm;
 			Reset();
@@ -485,9 +485,9 @@ class TPolinom : public THeadList<TMonom>
 					}
 				}
 			}
-			return *this;
+			
 		}
-		TPolinom& operator=(TPolinom a)
+		void operator=(TPolinom& a)
 		{
 			Reset();
 			a.Reset();
@@ -505,6 +505,6 @@ class TPolinom : public THeadList<TMonom>
 					a.GoNext();
 				}
 			}
-			return *this;
+			
 		}
 };
